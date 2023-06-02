@@ -1,0 +1,24 @@
+[
+  {
+    "key": "ctrl+alt+v",
+    "command": "toggleVim"
+  },
+  {
+    "key": "ctrl+enter",
+    "command": "code-runner.run"
+  },
+  {
+    "key": "alt+enter",
+    "command": "editor.action.quickFix"
+  },
+  {
+    "key": "f3",
+    "command": "editor.action.marker.nextInFiles",
+    "when": "editorFocus"
+  },
+  {
+    "key": "shift+f3",
+    "command": "editor.action.marker.prevInFiles",
+    "when": "editorFocus"
+  }
+]

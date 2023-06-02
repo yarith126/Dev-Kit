@@ -1,0 +1,29 @@
+set commentary
+
+" is = incsearch (increment search)
+" hls = hlsearch (highlight search)
+" ic = ignorecase
+set is hls ic
+set scrolloff=6
+
+if has('persistent_undo')
+  set undofile
+  set undodir=$HOME/.vim/undo
+endif
+set undolevels = 5000
+
+" Previous/Next tab
+map <tab> gt
+map <S-tab> gT
+
+" stop highlighting
+nmap <C-n> :noh<CR>
+
+" quick close
+nmap <C-w> :wq<CR>
+
+" paste from or replace with clipboard
+nnoremap S viw"*p
+" for linux or mac
+" nnoremap S viw"0p
+

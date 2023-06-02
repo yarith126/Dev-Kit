@@ -1,0 +1,56 @@
+{
+  "json.schemaDownload.enable": true,
+  "vim.foldfix": true,
+  "vim.incsearch": true,
+  "vim.hlsearch": true,
+  "vim.ignorecase": true,
+  "editor.cursorSurroundingLines": 10,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["<S-tab>"],
+      "after": ["g", "T"]
+    },
+    {
+      "before": ["<tab>"],
+      "after": ["g", "t"]
+    },
+    {
+      "before": ["<C-n>"],
+      "commands": [":noh"]
+    },
+    {
+      "before": ["S"],
+      "after": ["v", "i", "w", "\"", "*", "p"]
+    }
+  ],
+  "vim.handleKeys": {
+    "<C-w>": false,
+    "<C-a>": false,
+    "<C-c>": false,
+    "<C-v>": false,
+    "<C-f>": false,
+    "<C-s>": false,
+    "<C-z>": false
+  },
+  "editor.rulers": [80],
+  "editor.acceptSuggestionOnCommitCharacter": false, // disable autocomplete when using .(dot)
+  
+  // // Code Runner
+  // "code-runner.saveFileBeforeRun": true,
+  // // Prettier
+  // "[jsonc]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  // "[javascript]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  // "[typescript]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  // "[typescriptreact]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // },
+  // "[json]": {
+  //   "editor.defaultFormatter": "esbenp.prettier-vscode"
+  // }
+}

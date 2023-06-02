@@ -1,0 +1,25 @@
+targets:
+  $default:
+    builders:
+      source_gen|combining_builder:
+        generate_for:
+          include:
+            - lib/model/*.dart
+        options:
+          build_extensions:
+            'lib/model/{{}}.dart': 'lib/res/generated/model/{{}}.g.dart'
+      freezed:
+        generate_for:
+          include:
+            - lib/model/*.dart
+        options:
+          build_extensions:
+            'lib/model/{{}}.dart': 'lib/res/generated/model/{{}}.freezed.dart'
+          copy_with: false
+          equal: false
+      json_serializable:
+        generate_for:
+          include:
+            - lib/model/*.dart
+        options:
+          explicit_to_json: true
