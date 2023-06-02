@@ -15,9 +15,9 @@ NotificationDetails _platformChannelSpecifics = NotificationDetails(
 );
 
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
-class NotificationCon {
+class NotificationHandler {
   show({required String title, required String body}) {
     return flutterLocalNotificationsPlugin.show(
         0, title, body, _platformChannelSpecifics);

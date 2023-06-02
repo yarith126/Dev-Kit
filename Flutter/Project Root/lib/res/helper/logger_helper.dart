@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart' show kDebugMode, debugPrint;
+import 'package:flutter/foundation.dart';
 
 bool _noColorMode = false;
 
@@ -54,7 +54,7 @@ class Logger {
     }
   }
 
-  static detailError(Object? error,
+  static logError(Object? error,
       [StackTrace? stackTrace, Object? location]) {
     // remove unnecessary last character
     if (!(stackTrace.toString() == '' || stackTrace == null)) {

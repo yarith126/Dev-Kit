@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show ValueNotifier;
+import 'package:flutter/material.dart';
 
 class AppState {
   static ValueNotifier<bool> isBusy = ValueNotifier<bool>(false);

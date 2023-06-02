@@ -1,32 +1,27 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../errors.dart';
 
 late final FirebaseCrashlytics firebaseCrashlytics;
 late final FirebaseMessaging firebaseMessaging;
 
-class Initializer {
-  static init() async {
-    await _initLocalStorage();
-
-    await _initFirebaseCore();
-
-    _initFirebaseCrashlyticsAndErrorHandler();
-
-    await _initFirebaseMessaging();
-
-    await _initFlutterLocalNotificationsPlugin();
-  }
+/// Initializes necessary services at startup
+initializeStartupServices() async {
+  await _initLocalStorage();
+  await _initFirebaseCore();
+  _initErrorHandler();
+  await _initFirebaseMessaging();
+  await _initFlutterLocalNotificationsPlugin();
 }
 
 /// Hive with FlutterSecureStorage
@@ -47,33 +42,31 @@ _initLocalStorage() async {
   var encryptionKey = await secureStorage.read(key: 'key');
   final encryptionKeyUint8List = base64Url.decode(encryptionKey!);
   final hiveAesCipher = HiveAesCipher(encryptionKeyUint8List);
-  await Hive.openBox('app_setting', encryptionCipher: hiveAesCipher);
-  await Hive.openBox('credential', encryptionCipher: hiveAesCipher);
+  await Hive.openBox('example', encryptionCipher: hiveAesCipher);
 }
 
 _initFirebaseCore() async {
   /// Check for Play Services availability
-  /// Show error screen, Play Services isn't available.
   // TODO: implement GoogleApi invoke method
   if (Platform.isAndroid) {
     var platform = const MethodChannel('GoogleApi');
     int res = await platform.invokeMethod('hasPlayService');
     if (res != 0) {
-      runApp(const MaterialApp(home: PlayServicesUnavailableScreen()));
-      throw Exception('Can not start without Play Services');
+      // TODO: this may not be a good approach
+      // runApp(const MaterialApp(home: PlayServicesUnavailableScreen()));
+      // throw Exception('Can not start without Play Services');
     }
   }
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   firebaseCrashlytics = FirebaseCrashlytics.instance;
   firebaseMessaging = FirebaseMessaging.instance;
 }
 
-/// Catches any errors in app and log to console
+/// Error handler
+///
 /// It sends errors to Firebase Crashlytics in release and profile mode.
-_initFirebaseCrashlyticsAndErrorHandler() {
+_initErrorHandler() {
   if (!kDebugMode) {
     // Set Flutter fatal screen
     ErrorWidget.builder = (errorDetails) => const FlutterFatalScreen();
@@ -81,36 +74,34 @@ _initFirebaseCrashlyticsAndErrorHandler() {
     FlutterError.onError = firebaseCrashlytics.recordFlutterFatalError;
   }
 
-  // Handles non-Flutter errors including native side
+  // Handles platform errors like Dart and native errors
   PlatformDispatcher.instance.onError = (error, stackTrace) {
     if (!kDebugMode) {
       firebaseCrashlytics.recordError(error, stackTrace, fatal: true);
     }
-    Logger.reportError(error, stackTrace);
-    AppState.isBusy.value = false;
-    Go.back();
-    ErrorDialog.show();
+    // Logger.logError(error, stackTrace);
+    // AppState.isBusy.value = false;
+    // navigatorKey.currentState?.pop();
+    // showPlatformErrorDialog();
     return true;
   };
 }
 
 _initFirebaseMessaging() async {
   final fcmToken = await firebaseMessaging.getToken();
-  Logger.error(fcmToken);
 
-  /// Token handler
+  // TODO: If necessary send token to application server.
   firebaseMessaging.onTokenRefresh.listen((fcmToken) {
-    // TODO: If necessary send token to application server.
     // Note: This callback is fired at each app startup and whenever a new
     // token is generated.
   }).onError((err) {
     // Error getting token.
   });
 
-  // Foreground message handler
+  // Foreground state message handler
   FirebaseMessaging.onMessage.listen(_firebaseMessagingBackgroundHandler);
 
-  // Background message handler
+  // Background state message handler
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // Terminated state message handler
@@ -123,7 +114,7 @@ _initFlutterLocalNotificationsPlugin() async {
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
-  await NotificationHandler.flutterLocalNotificationsPlugin.initialize(
+  await FlutterLocalNotificationsPlugin().initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: _notificationTap,
     onDidReceiveBackgroundNotificationResponse: _notificationTap,
@@ -132,13 +123,12 @@ _initFlutterLocalNotificationsPlugin() async {
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  NotificationHandler.showNotification(message);
+  // TODO: show notification
 }
 
 @pragma('vm:entry-point')
 void _notificationTap(NotificationResponse response) {
-  Logger.success(response.payload);
-  var json = decodeJson(response.payload ?? '');
-  if (json['type'] == null) return;
-  if (json['type'] == 'chat') Go.to(const CustomerServiceScreen());
+  // var json = decodeJson(response.payload ?? '');
+  // if (json['type'] == null) return;
+  // if (json['type'] == 'chat') route.push(const CustomerServiceScreen());
 }

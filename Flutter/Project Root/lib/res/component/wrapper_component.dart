@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../../viewmodel/app_state_viewmodel.dart';
 
 class LoadingWrapper extends StatefulWidget {
   final Widget child;
@@ -19,33 +19,20 @@ class _LoadingWrapperState extends State<LoadingWrapper> {
         ValueListenableBuilder<bool>(
           valueListenable: AppState.isBusy,
           builder: (_, isBusy, __) {
-            return isBusy ? const _LoadingWidget() : const SizedBox();
+            return isBusy ? _loadingWidget : const SizedBox();
           },
         ),
       ],
     );
   }
+
+  final Widget _loadingWidget = Stack(
+    children: [
+      Container(color: Colors.white70),
+      const CircularProgressIndicator(),
+    ],
+  );
 }
-
-class _LoadingWidget extends StatelessWidget {
-  const _LoadingWidget({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(color: Colors.white70),
-        Center(
-          child: LoadingAnimationWidget.beat(
-            color: Palette.primary,
-            size: 40,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 
 class LoadingWrapperWithUnfocus extends StatelessWidget {
   final Widget child;

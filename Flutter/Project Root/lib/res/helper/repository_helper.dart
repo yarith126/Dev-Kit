@@ -1,8 +1,9 @@
 import 'dart:convert';
-
 import 'package:http/http.dart';
 
-/// Verifies http response and return reponse body
+import '../errors.dart';
+
+/// Checks http response and return json
 ///
 /// Throws [HttpStatusException] if the http status code isn't 20x
 ///
@@ -33,7 +34,7 @@ getJsonData(Map<String, dynamic> json) {
   return data;
 }
 
-/// Decodes string to json
+/// Decodes json
 ///
 /// Throws [JsonException] if the input is not valid JSON text.
 Map<String, dynamic> decodeJson(String encodedJson) {
@@ -46,47 +47,7 @@ Map<String, dynamic> decodeJson(String encodedJson) {
   }
 }
 
+/// Throws error with stack
 Never _chainedThrow(error, stack) {
   throw Error.throwWithStackTrace(error, stack);
-}
-
-/// -------------------- Exceptions --------------------
-
-/// Error code
-class ErrorCode {
-  static String unhandledException = 'UNHANDLED_EXCEPTION';
-  static String jsonException = 'NOT_A_JSON';
-  static String jsonBadFormat = 'JSON_BAD_FORMAT';
-  static String jsonDataIsNull = 'JSON_DATA_IS_NULL';
-  static String modelException = 'MODEL_EXCEPTION';
-  static String socketException = 'SOCKET_EXCEPTION';
-  static String httpException = 'HTTP_EXCEPTION';
-  static String playServiceUnavailable = 'PLAY_SERVICE_UNAVAILABLE';
-  static String flutterError = 'FLUTTER_ERROR';
-}
-
-/// Custom abtract exception
-abstract class _ErrorCodeException implements Exception {
-  String errorCode;
-  Object message;
-
-  _ErrorCodeException(this.errorCode, this.message);
-
-  @override
-  String toString() {
-    return '$runtimeType: [$errorCode] $message';
-  }
-}
-
-class JsonException extends _ErrorCodeException {
-  JsonException(String errorCode, Object message) : super(errorCode, message);
-}
-
-class ModelException extends _ErrorCodeException {
-  ModelException(String errorCode, Object message) : super(errorCode, message);
-}
-
-class HttpStatusException extends _ErrorCodeException {
-  HttpStatusException(String errorCode, int statusCode, Object message)
-      : super('${errorCode}_$statusCode', message);
 }
