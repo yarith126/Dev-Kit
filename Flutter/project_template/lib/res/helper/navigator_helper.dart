@@ -1,73 +1,49 @@
 import 'package:flutter/material.dart';
 
-final navigatorKey = GlobalKey<NavigatorState>();
-
-enum GoAnim { fade }
-
 /// A navigator helper
 ///
 /// Created in purpose of reducing boilerplate code but at a cost of losing
-/// functionalities like named route etc.
+/// functionalities like named route feature and anything else.
 ///
 /// Parameter for push, replace, and reset:
 /// {@template BuildContext.Navigator.parameter}
-/// Pass a widget [child] for screen and an optional parameter [anim] to use
-/// pre-made screen transition animation
+/// Page route will be created with [child]
+///
+/// Pass [anim] to use pre-made screen transition animation
 /// {@endtemplate}
-extension Navigator on BuildContext {
-  /// Push a page
+extension ExtendedNavigator on BuildContext {
+  /// Push route
   ///
   /// {@macro BuildContext.Navigator.parameter}
   Future<T?> push<T extends Object?>(Widget child, [GoAnim? anim]) {
-    if (!_isNotNullNavigatorState()) return Future.value(null);
-    return navigatorKey.currentState!.push(_getPageRoute(child, anim));
+    return Navigator.push(this, _getPageRoute(child, anim));
   }
 
-  /// Replace a page
+  /// Push replacement route
   ///
   /// {@macro BuildContext.Navigator.parameter}
-  Future<T?> replace<T extends Object?>(Widget child, [GoAnim? anim]) {
-    if (!_isNotNullNavigatorState()) return Future.value(null);
-    return navigatorKey.currentState!.pushReplacement(
-      _getPageRoute(child, anim),
-    );
+  Future<T?> pushReplacement<T extends Object?>(Widget child, [GoAnim? anim]) {
+    return Navigator.pushReplacement(this, _getPageRoute(child, anim));
   }
 
-  /// Reset and push a page
+  /// Push route and remove all other routes
   ///
   /// {@macro BuildContext.Navigator.parameter}
-  Future<T?> reset<T extends Object?>(Widget child, [GoAnim? anim]) {
-    if (!_isNotNullNavigatorState()) return Future.value(null);
-    return navigatorKey.currentState!.pushAndRemoveUntil(
-      _getPageRoute(child, anim),
-      (route) => false,
-    );
+  Future<T?> pushAndRemoveAll<T extends Object?>(Widget child, [GoAnim? anim]) {
+    return Navigator.pushAndRemoveUntil(
+        this, _getPageRoute(child, anim), (_) => false);
   }
 
-  /// Pop current page out of stacks
+  /// Pop route
   void pop<T extends Object?>([T? result]) {
-    if (_canPopNavigator()) {
-      navigatorKey.currentState?.pop([result]);
+    if (!Navigator.canPop(this)) {
+      return debugPrint('Navigator: Fail to pop page');
     }
-  }
-
-  bool _isNotNullNavigatorState() {
-    if (navigatorKey.currentState == null) {
-      debugPrint('WARNING: navigator.currentState is null');
-      return false;
-    }
-    return true;
-  }
-
-  bool _canPopNavigator() {
-    if (!_isNotNullNavigatorState()) return false;
-    if (!navigatorKey.currentState!.canPop()) {
-      debugPrint('WARNING: navigator.currentState!.canPop() is false');
-      return false;
-    }
-    return true;
+    Navigator.pop(this);
   }
 }
+
+enum GoAnim { fade }
 
 Route<T> _getPageRoute<T extends Object?>(Widget child, [GoAnim? anim]) {
   if (anim == GoAnim.fade) {

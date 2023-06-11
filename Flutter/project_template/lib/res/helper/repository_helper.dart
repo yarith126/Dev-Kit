@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'package:example/res/error_codes.dart';
+import 'package:example/res/error_exceptions.dart';
 import 'package:http/http.dart';
 
-import '../errors.dart';
 
 /// Checks http response and return json
 ///
@@ -9,7 +10,6 @@ import '../errors.dart';
 ///
 /// Throws [JsonException] if the input is not valid JSON text.
 Map<String, dynamic> processHttpResponse(Response response) {
-  response.headers;
   var json = decodeJson(response.body);
 
   String errorCode = response.statusCode.toString();

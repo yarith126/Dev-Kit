@@ -1,14 +1,16 @@
+import 'package:example/res/generated/l10n/l10n.dart';
+import 'package:example/initializer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
-import 'res/generated/l10n/l10n.dart';
-import 'res/helper/buildcontext_helper.dart';
-import 'res/helper/initializer_helper.dart';
-
 void main() async {
-  initializeStartupServices();
   // TODO: request permission at startup
+  await initLocalStorage();
+  await initFirebaseCore();
+  initErrorHandler();
+  await initFirebaseMessaging();
+  await initFlutterLocalNotificationsPlugin();
   runApp(
     MultiProvider(
       providers: _providers,
@@ -24,7 +26,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      navigatorKey: navigatorKey,
       title: 'Example',
       localizationsDelegates: _localizationsDelegates,
       supportedLocales: S.delegate.supportedLocales,

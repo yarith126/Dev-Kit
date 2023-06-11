@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:example/res/error_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -10,26 +11,15 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../errors.dart';
-
 late final FirebaseCrashlytics firebaseCrashlytics;
 late final FirebaseMessaging firebaseMessaging;
-
-/// Initializes necessary services at startup
-initializeStartupServices() async {
-  await _initLocalStorage();
-  await _initFirebaseCore();
-  _initErrorHandler();
-  await _initFirebaseMessaging();
-  await _initFlutterLocalNotificationsPlugin();
-}
 
 /// Hive with FlutterSecureStorage
 ///
 /// It also triggers WidgetsFlutterBinding.ensureInitialized()
 /// Data is encrypted with AES encryption.
 /// Data will be lost if key somehow is mismatched.
-_initLocalStorage() async {
+initLocalStorage() async {
   await Hive.initFlutter();
   const secureStorage = FlutterSecureStorage();
 
@@ -45,7 +35,7 @@ _initLocalStorage() async {
   await Hive.openBox('example', encryptionCipher: hiveAesCipher);
 }
 
-_initFirebaseCore() async {
+initFirebaseCore() async {
   /// Check for Play Services availability
   // TODO: implement GoogleApi invoke method
   if (Platform.isAndroid) {
@@ -66,7 +56,7 @@ _initFirebaseCore() async {
 /// Error handler
 ///
 /// It sends errors to Firebase Crashlytics in release and profile mode.
-_initErrorHandler() {
+initErrorHandler() {
   if (!kDebugMode) {
     // Set Flutter fatal screen
     ErrorWidget.builder = (errorDetails) => const FlutterFatalScreen();
@@ -87,7 +77,7 @@ _initErrorHandler() {
   };
 }
 
-_initFirebaseMessaging() async {
+initFirebaseMessaging() async {
   final fcmToken = await firebaseMessaging.getToken();
 
   // TODO: If necessary send token to application server.
@@ -108,7 +98,7 @@ _initFirebaseMessaging() async {
   await firebaseMessaging.getInitialMessage();
 }
 
-_initFlutterLocalNotificationsPlugin() async {
+initFlutterLocalNotificationsPlugin() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/ic_launcher');
   const InitializationSettings initializationSettings = InitializationSettings(
