@@ -1,7 +1,7 @@
 ## Commands
 
 * `flutter create <app> --empty`
-* `flutter pub run build_runner [build|watch] --delete-conflicting-outputs`
+* `dart run build_runner watch --delete-conflicting-outputs`
 
 ## IDE plugins and configs
 **Android Studio**
