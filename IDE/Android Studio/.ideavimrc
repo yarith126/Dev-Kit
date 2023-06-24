@@ -1,16 +1,13 @@
 set commentary
 
-" is = incsearch (increment search)
-" hls = hlsearch (highlight search)
-" ic = ignorecase
-set is hls ic
+set is hls ic "increment search, highlight search, ignore case
 set scrolloff=6
 
 if has('persistent_undo')
   set undofile
   set undodir=$HOME/.vim/undo
+  set undolevels=5000
 endif
-set undolevels = 5000
 
 " Previous/Next tab
 map <tab> gt
