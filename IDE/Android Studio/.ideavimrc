@@ -1,7 +1,8 @@
 set commentary
 
-set is hls ic "increment search, highlight search, ignore case
-set scrolloff=6
+set is hls ic " increment search, highlight search, ignore case
+set nu nocp " number, nocompatible
+set mouse=a scrolloff=6
 
 if has('persistent_undo')
   set undofile
@@ -13,14 +14,11 @@ endif
 map <tab> gt
 map <S-tab> gT
 
-" stop highlighting
-nmap <C-n> :noh<CR>
+nmap <C-n> :noh<CR> " stop highlighting
 
-" quick close
-nmap <C-w> :wq<CR>
+nmap <C-w> :wq<CR> " quick close
 
-" paste from or replace with clipboard
-nnoremap S viw"*p
+nnoremap S viw"*p " paste from or replace with clipboard
 " for linux or mac
 " nnoremap S viw"0p
 
