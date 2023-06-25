@@ -1,5 +1,3 @@
-set commentary
-
 set is hls ic " increment search, highlight search, ignore case
 set nu nocp " number, nocompatible
 set mouse=a scrolloff=6
