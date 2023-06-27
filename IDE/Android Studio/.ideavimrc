@@ -8,15 +8,20 @@ if has('persistent_undo')
   set undolevels=5000
 endif
 
-" Previous/Next tab
+" Previous/next tab
 map <tab> gt
 map <S-tab> gT
 
-nmap <C-n> :noh<CR> " stop highlighting
+" Stop highlighting
+nmap <C-n> :noh<CR>
 
-nmap <C-w> :wq<CR> " quick close
+" Quick close
+nmap <C-w> :wq<CR>
 
-nnoremap S viw"*p " paste from or replace with clipboard
-" for linux or mac
+" Copy
+vmap <C-c> "*y
+
+" Replace word with clipboard
+nnoremap S viw"*p
+" For linux or mac
 " nnoremap S viw"0p
-
