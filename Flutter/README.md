@@ -7,7 +7,16 @@
 **Android Studio**
 - Set timing to 0 in `Settings > Editor > General > Code Completion`
 - Install the following extensions: `IdeaVim`, `Flutter Pub Version Checker`, `Flutter Snippets`, `FlutterAssetAutoCompletion`
-
+Alt+` Terminal
+Alt+1 Run
+Alt+2 Message
+Alt+3 Dart Analysis
+Alt+4 Project
+Alt+5 Flutter Performance
+Alt+6 Device File Explorer
+Alt+L Logcat
+Alt+B Bookmark
+Alt+S Structure
 **VSCode**
 
 
